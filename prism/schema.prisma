@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"  // Change to "postgresql" for prod
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  category    String   // e.g., "Kurtis", "Sarees"
+  size        String[] // e.g., ["S", "M", "L"]
+  color       String[]
+  images      String[] // URLs
+  stock       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  userId    String?
+  items     Json[]   // [{productId, qty}]
+  total     Float    @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  userId      String?
+  items       Json[]
+  total       Float
+  status      String   @default("pending")
+  paymentId   String?
+  address     String?
+  createdAt   DateTime @default(now())
+}
